@@ -22,11 +22,11 @@ class WatchlistMovieService
         private readonly MovieApiProviderContract $movieProvider,
     ){}
 
-    public function list(User $user, ?string $status): LengthAwarePaginator
+    public function list(User $user, array $filters): LengthAwarePaginator
     {
         $watchlist = $this->watchlistRepository->firstOrCreateForUser($user);
 
-        return $this->watchlistRepository->paginateMovies($watchlist, $status);
+        return $this->watchlistRepository->paginateMovies($watchlist, $filters);
     }
 
     public function add(User $user, array $data): Movie
@@ -81,24 +81,6 @@ class WatchlistMovieService
         $watchlist = $this->watchlistRepository->firstOrCreateForUser($user);
 
         $this->watchlistRepository->detachMovie($watchlist, $movieId);
-    }
-
-    public function refetch(User $user, string $movieId): void
-    {
-        $watchlist    = $this->watchlistRepository->firstOrCreateForUser($user);
-        $movie        = $this->watchlistRepository->findMovieOrFail($watchlist, $movieId);
-        $providerName = $this->movieProvider->providerName();
-
-        $externalIdRecord = $movie->externalIds()
-            ->where('provider', $providerName)
-            ->first();
-
-        FetchMovieMetadataJob::dispatch(
-            $movie,
-            $providerName,
-            $externalIdRecord?->external_id,
-            $externalIdRecord ? null : $movie->title,
-        );
     }
 
     private function resolveMovie(array $data, string $providerName): array

@@ -15,4 +15,6 @@ interface MovieRepositoryContract
 
     public function hasMetadataForProvider(Movie $movie, string $provider): bool;
 
+    public function findById(string $movieId): Movie;
+
 }

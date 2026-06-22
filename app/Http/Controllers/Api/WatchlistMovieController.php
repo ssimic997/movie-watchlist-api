@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Exceptions\MovieAlreadyInWatchlistException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AddMovieRequest;
+use App\Http\Requests\Api\ListWatchlistMoviesRequest;
 use App\Http\Requests\Api\UpdateWatchlistMovieRequest;
 use App\Http\Resources\Api\WatchlistMovieResource;
 use App\Services\WatchlistMovieService;
@@ -21,9 +22,9 @@ class WatchlistMovieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(ListWatchlistMoviesRequest $request): AnonymousResourceCollection
     {
-        $movies = $this->service->list($request->user(), $request->status);
+        $movies = $this->service->list($request->user(), $request->filters());
 
         return WatchlistMovieResource::collection($movies);
     }
@@ -70,12 +71,5 @@ class WatchlistMovieController extends Controller
         $this->service->remove($request->user(), $movieId);
 
         return response()->json(null, 204);
-    }
-
-    public function refetchMetadata(Request $request, string $movieId): JsonResponse
-    {
-        $this->service->refetch($request->user(), $movieId);
-
-        return response()->json(null, 202);
     }
 }
