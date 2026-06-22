@@ -16,13 +16,17 @@ class WatchlistRepository implements WatchlistRepositoryContract
         return $user->watchlists()->firstOrCreate([], ['name' => "{$user->name}'s Watchlist"]);
     }
 
-    public function paginateMovies(Watchlist $watchlist, ?string $status, int $perPage = 5): LengthAwarePaginator
+    public function paginateMovies(Watchlist $watchlist, array $filters): LengthAwarePaginator
     {
         return $watchlist->movies()
             ->with(['externalIds', 'metadata'])
-            ->when($status, fn ($q) => $q->where('watchlist_movies.status', $status))
-            ->orderByDesc('status')
-            ->paginate($perPage);
+            ->when($filters['status'], fn ($q) => $q->where('watchlist_movies.status', $filters['status']))
+            ->when($filters['search'], function ($q) use ($filters) {
+                $escaped = addcslashes($filters['search'], '%_\\');
+                $q->where('movies.title', 'ilike', "%{$escaped}%");
+            })
+            ->orderBy($filters['sort_by']->column(), $filters['sort_dir'])
+            ->paginate($filters['per_page']);
     }
 
     public function findMovieOrFail(Watchlist $watchlist, string $movieId): Movie

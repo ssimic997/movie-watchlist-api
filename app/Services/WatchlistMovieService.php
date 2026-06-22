@@ -22,11 +22,11 @@ class WatchlistMovieService
         private readonly MovieApiProviderContract $movieProvider,
     ){}
 
-    public function list(User $user, ?string $status): LengthAwarePaginator
+    public function list(User $user, array $filters): LengthAwarePaginator
     {
         $watchlist = $this->watchlistRepository->firstOrCreateForUser($user);
 
-        return $this->watchlistRepository->paginateMovies($watchlist, $status);
+        return $this->watchlistRepository->paginateMovies($watchlist, $filters);
     }
 
     public function add(User $user, array $data): Movie

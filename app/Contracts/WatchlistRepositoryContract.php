@@ -13,7 +13,7 @@ interface WatchlistRepositoryContract
 
     public function firstOrCreateForUser(User $user): Watchlist;
 
-    public function paginateMovies(Watchlist $watchlist, ?string $status, int $perPage = 5): LengthAwarePaginator;
+    public function paginateMovies(Watchlist $watchlist, array $filters): LengthAwarePaginator;
 
     public function findMovieOrFail(Watchlist $watchlist, string $movieId): Movie;
 
