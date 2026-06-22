@@ -23,7 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{movieId}', [WatchlistMovieController::class, 'show'])->name('api.watchlist.show');
         Route::patch('/{movieId}', [WatchlistMovieController::class, 'update'])->name('api.watchlist.update');
         Route::delete('/{movieId}', [WatchlistMovieController::class, 'destroy'])->name('api.watchlist.destroy');
-        Route::patch('/{movieId}/metadata', [MovieController::class, 'refetchMetadata'])->name('api.watchlist.metadata.update');
     });
 
     Route::prefix('/movies')->group(function () {
