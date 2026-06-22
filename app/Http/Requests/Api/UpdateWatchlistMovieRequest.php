@@ -20,7 +20,6 @@ class UpdateWatchlistMovieRequest extends FormRequest
         return [
             'status'      => ['sometimes', Rule::enum(MovieStatus::class)],
             'user_rating' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:10'],
-            'notes'       => ['sometimes', 'nullable', 'string', 'max:2000'],
         ];
     }
 }
