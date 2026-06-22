@@ -64,7 +64,12 @@ class WatchlistRepository implements WatchlistRepositoryContract
 
     public function detachMovie(Watchlist $watchlist, string $movieId): void
     {
-        $watchlist->movies()->where('movies.id', $movieId)->firstOrFail();
+        $movieExists = $watchlist->movies()->where('movies.id', $movieId)->exists();
+
+        if (! $movieExists) {
+            return;
+        }
+
         $watchlist->movies()->detach($movieId);
     }
 }
