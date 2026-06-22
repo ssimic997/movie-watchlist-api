@@ -72,4 +72,19 @@ class WatchlistRepository implements WatchlistRepositoryContract
 
         $watchlist->movies()->detach($movieId);
     }
+
+    public function findMovieById(Watchlist $watchlist, string $movieId): Movie | null
+    {
+        $movie = $watchlist->movies()
+            ->where('movies.id', $movieId)
+            ->first();
+
+        if (! $movie) {
+            return null;
+        }
+
+        $movie->load(['externalIds', 'metadata']);
+
+        return $movie;
+    }
 }

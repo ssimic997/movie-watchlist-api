@@ -62,11 +62,11 @@ class WatchlistMovieService
         return $movie;
     }
 
-    public function show(User $user, string $movieId): Movie
+    public function findMovieById(User $user, string $movieId): Movie | null
     {
         $watchlist = $this->watchlistRepository->firstOrCreateForUser($user);
 
-        return $this->watchlistRepository->findMovieOrFail($watchlist, $movieId);
+        return $this->watchlistRepository->findMovieById($watchlist, $movieId);
     }
 
     public function update(User $user, string $movieId, array $attributes): Movie

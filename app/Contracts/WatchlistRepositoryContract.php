@@ -16,6 +16,7 @@ interface WatchlistRepositoryContract
     public function paginateMovies(Watchlist $watchlist, array $filters): LengthAwarePaginator;
 
     public function findMovieOrFail(Watchlist $watchlist, string $movieId): Movie;
+    public function findMovieById(Watchlist $watchlist, string $movieId): Movie | null;
 
     public function hasMovie(Watchlist $watchlist, string $movieId): bool;
 
