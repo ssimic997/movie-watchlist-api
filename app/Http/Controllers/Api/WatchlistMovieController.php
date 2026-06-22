@@ -46,9 +46,13 @@ class WatchlistMovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, string $movieId): \Illuminate\Http\JsonResponse
+    public function show(Request $request, string $movieId): JsonResponse
     {
-        $movie = $this->service->show($request->user(), $movieId);
+        $movie = $this->service->findMovieById($request->user(), $movieId);
+
+        if (! $movie) {
+            return response()->json(['message' => 'Movie not found in your watchlist.'], 404);
+        }
 
         return (new WatchlistMovieResource($movie))->response();
     }
