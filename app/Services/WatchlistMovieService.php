@@ -83,24 +83,6 @@ class WatchlistMovieService
         $this->watchlistRepository->detachMovie($watchlist, $movieId);
     }
 
-    public function refetch(User $user, string $movieId): void
-    {
-        $watchlist    = $this->watchlistRepository->firstOrCreateForUser($user);
-        $movie        = $this->watchlistRepository->findMovieOrFail($watchlist, $movieId);
-        $providerName = $this->movieProvider->providerName();
-
-        $externalIdRecord = $movie->externalIds()
-            ->where('provider', $providerName)
-            ->first();
-
-        FetchMovieMetadataJob::dispatch(
-            $movie,
-            $providerName,
-            $externalIdRecord?->external_id,
-            $externalIdRecord ? null : $movie->title,
-        );
-    }
-
     private function resolveMovie(array $data, string $providerName): array
     {
         if (! empty($data['external_id'])) {

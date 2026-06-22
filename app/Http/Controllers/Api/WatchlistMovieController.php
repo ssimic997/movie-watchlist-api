@@ -71,11 +71,4 @@ class WatchlistMovieController extends Controller
 
         return response()->json(null, 204);
     }
-
-    public function refetchMetadata(Request $request, string $movieId): JsonResponse
-    {
-        $this->service->refetch($request->user(), $movieId);
-
-        return response()->json(null, 202);
-    }
 }

@@ -41,4 +41,8 @@ class MovieRepository implements MovieRepositoryContract
             ->exists();
     }
 
+    public function findById(string $movieId): Movie
+    {
+        return Movie::query()->findOrFail($movieId);
+    }
 }
